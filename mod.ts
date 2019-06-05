@@ -29,16 +29,21 @@ export class Bitfield {
     if (opts instanceof Uint8Array) {
       opts = { buffer: opts };
     }
+    
     this.pageOffset = opts.pageOffset || 0;
     this.pageSize = opts.pageSize || 1024;
     this.pages = opts.pages || new Pager(this.pageSize);
+    
     this.byteLength = this.pages.length * this.pageSize;
     this.length = 8 * this.byteLength;
+    
     if (!powerOfTwo(this.pageSize)) {
       throw new Error("The page size should be a power of two");
     }
+    
     this._trackUpdates = !!opts.trackUpdates;
     this._pageMask = this.pageSize - 1;
+    
     if (opts.buffer) {
       for (let i: number = 0; i < opts.buffer.length; i += this.pageSize) {
         this.pages.set(
@@ -64,11 +69,12 @@ export class Bitfield {
     const o: number = (i & this._pageMask) + this.pageOffset;
     const j: number = (i - o) / this.pageSize;
     const page: Page = this.pages.get(j, false);
-    // o += this.pageOffset
+
     if (page.buffer[o] === b) {
       return false;
     }
     page.buffer[o] = b;
+    
     if (i >= this.byteLength) {
       this.byteLength = i + 1;
       this.length = this.byteLength * 8;
@@ -76,6 +82,7 @@ export class Bitfield {
     if (this._trackUpdates) {
       this.pages.updated(page);
     }
+    
     return true;
   }
 
@@ -99,10 +106,9 @@ export class Bitfield {
     const all: Uint8Array = new Uint8Array(this.pages.length * this.pageSize);
     for (let i: number = 0; i < this.pages.length; i++) {
       const next: Page = this.pages.get(i, true);
-      const allOffset: number = i * this.pageSize;
       if (next) {
         all
-          .subarray(allOffset)
+          .subarray(i * this.pageSize)
           .set(
             next.buffer.subarray(
               this.pageOffset,
