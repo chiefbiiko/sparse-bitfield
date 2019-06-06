@@ -19,8 +19,10 @@ export class Bitfield {
   readonly pageOffset: number;
   readonly pageSize: number;
   readonly pages: Pager;
+  
   byteLength: number;
   length: number;
+  
   private _trackUpdates: boolean;
   private _pageMask: number;
 
@@ -51,6 +53,7 @@ export class Bitfield {
           opts.buffer.slice(i, i + this.pageSize)
         );
       }
+      
       this.byteLength = opts.buffer.length;
       this.length = 8 * this.byteLength;
     }
@@ -61,6 +64,7 @@ export class Bitfield {
     const o: number = i & this._pageMask;
     const j: number = (i - o) / this.pageSize;
     const page: Page = this.pages.get(j, true);
+    
     return page ? page.buffer[o + this.pageOffset] : 0;
   }
 
@@ -73,12 +77,14 @@ export class Bitfield {
     if (page.buffer[o] === b) {
       return false;
     }
+    
     page.buffer[o] = b;
     
     if (i >= this.byteLength) {
       this.byteLength = i + 1;
       this.length = this.byteLength * 8;
     }
+    
     if (this._trackUpdates) {
       this.pages.updated(page);
     }
@@ -90,6 +96,7 @@ export class Bitfield {
   get(i: number): boolean {
     const o: number = i & 7;
     const j: number = (i - o) / 8;
+    
     return !!(this.getByte(j) & (128 >> o));
   }
 
@@ -98,14 +105,17 @@ export class Bitfield {
     const o: number = i & 7;
     const j: number = (i - o) / 8;
     const b: number = this.getByte(j);
+    
     return this.setByte(j, v ? b | (128 >> o) : b & (255 ^ (128 >> o)));
   }
 
   /** Gets a single buffer representing the entire bitfield. */
   toBuffer(): Uint8Array {
     const all: Uint8Array = new Uint8Array(this.pages.length * this.pageSize);
+    
     for (let i: number = 0; i < this.pages.length; i++) {
       const next: Page = this.pages.get(i, true);
+      
       if (next) {
         all
           .subarray(i * this.pageSize)
@@ -117,6 +127,7 @@ export class Bitfield {
           );
       }
     }
+    
     return all;
   }
 }
