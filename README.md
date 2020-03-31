@@ -5,16 +5,14 @@ without allocating a massive buffer. This is a port of [mafintosh's npm module](
 
 This module is mostly useful if you need a big bitfield where you won't nessecarily set every bit.
 
-```
-npm install sparse-bitfield
-```
+all credit to the original author [mafintosh](https://github.com/mafintosh)
 
-[![Travis](http://img.shields.io/travis/chiefbiiko/sparse-bitfield.svg?style=flat)](http://travis-ci.org/chiefbiiko/sparse-bitfield) [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/chiefbiiko/sparse-bitfield?branch=master&svg=true)](https://ci.appveyor.com/project/chiefbiiko/sparse-bitfield)
+[![ci](https://github.com/chiefbiiko/sparse-bitfield/workflows/ci/badge.svg?branch=master)](https://github.com/chiefbiiko/sparse-bitfield/actions)
 
-## Usage
+## usage
 
 ``` js
-import { Bitfield } from "https://denopkg.com/chiefbiiko/sparse-bitfield/mod.ts"
+import { Bitfield } from "https://denopkg.com/chiefbiiko/sparse-bitfield@v0.1.0/mod.ts"
 
 const bits: Bitfield = new Bitfield()
 
@@ -26,7 +24,7 @@ bits.set(1000000000000, true) // set the 1.000.000.000.000th bit
 Running the above example will allocate two 1kb buffers internally.
 Each 1kb buffer can hold information about 8192 bits so the first one will be used to store information about the first two bits and the second will be used to store the 1.000.000.000.000th bit.
 
-## API
+## api
 
 #### `const bits: Bitfield = bitfield(options?: BitfieldOptions)`
 
@@ -57,6 +55,6 @@ If you set `trackUpdates` to true in the constructor you can use `.lastUpdate()`
 
 Get a single buffer representing the entire bitfield.
 
-## License
+## license
 
 [MIT](./LICENSE)

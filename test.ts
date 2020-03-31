@@ -1,5 +1,7 @@
-import { test, runIfMain } from "https://deno.land/std/testing/mod.ts";
-import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
+import {
+  assertEquals
+} from "https://deno.land/std@v0.38.0/testing/asserts.ts";
+
 import { Bitfield } from "./mod.ts";
 
 /** Concatenates given buffers. */
@@ -17,7 +19,7 @@ function concat(bufs: Uint8Array[]): Uint8Array {
   return buf;
 }
 
-test({
+Deno.test({
   name: "set and get",
   fn(): void {
     const bits: Bitfield = new Bitfield();
@@ -30,7 +32,7 @@ test({
   }
 });
 
-test({
+Deno.test({
   name: "set large and get",
   fn(): void {
     const bits: Bitfield = new Bitfield();
@@ -43,7 +45,7 @@ test({
   }
 });
 
-test({
+Deno.test({
   name: "get and set buffer",
   fn(): void {
     const bits: Bitfield = new Bitfield({ trackUpdates: true });
@@ -54,13 +56,13 @@ test({
     );
     bits.set(9999999999999, true);
     const bits2: Bitfield = new Bitfield();
-    var upd = bits.pages.lastUpdate();
+    var upd = bits.pages.lastUpdate()!;
     bits2.pages.set(Math.floor(upd.offset / 1024), upd.buffer);
     assertEquals(bits2.get(9999999999999), true, "bit is set");
   }
 });
 
-test({
+Deno.test({
   name: "toBuffer",
   fn(): void {
     const bits: Bitfield = new Bitfield();
@@ -75,7 +77,7 @@ test({
   }
 });
 
-test({
+Deno.test({
   name: "pass in buffer",
   fn(): void {
     const bits: Bitfield = new Bitfield();
@@ -87,7 +89,7 @@ test({
   }
 });
 
-test({
+Deno.test({
   name: "set small buffer",
   fn(): void {
     const buf: Uint8Array = new Uint8Array(1);
@@ -97,5 +99,3 @@ test({
     assertEquals(bits.pages.get(0).buffer.length, bits.pageSize);
   }
 });
-
-runIfMain(import.meta, { parallel: true });

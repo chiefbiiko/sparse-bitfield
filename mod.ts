@@ -1,7 +1,7 @@
 import {
   Pager,
   Page
-} from "https://denopkg.com/chiefbiiko/memory-pager/mod.ts";
+} from "https://denopkg.com/chiefbiiko/memory-pager@v0.1.0/mod.ts";
 
 /** Is the given number a power of two? */
 function powerOfTwo(x: number): boolean {
